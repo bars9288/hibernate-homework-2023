@@ -1,9 +1,11 @@
 package ru.hh.school;
 
+import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Environment;
 import ru.hh.school.entity.Resume;
 import ru.hh.school.entity.Area;
 import ru.hh.school.entity.Employer;
