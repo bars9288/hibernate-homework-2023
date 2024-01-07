@@ -1,23 +1,36 @@
 package ru.hh.school.entity;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-//TODO: оформите entity
+//TODO: оформите entity ++++
+
+@Entity
+@Table (name = "employer")
 public class Employer {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "employer_id")
   private Integer id;
 
+  @Column(name = "company_name", length = 100, nullable = false)
   private String companyName;
 
   // не используйте java.util.Date
   // https://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#basic-datetime-java8
+
+  @Column(name = "creation_time")
   private LocalDateTime creationTime;
 
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "employer")
+  // https://javarush.com/quests/lectures/questhibernate.level13.lecture05
   private List<Vacancy> vacancies = new ArrayList<>();
 
+  @Column(name = "block_time")
   private LocalDateTime blockTime;
 
   public List<Vacancy> getVacancies() {
@@ -46,19 +59,30 @@ public class Employer {
 
   // статьи на тему реализации equals() и hashCode():
   //
+  //java.sql.Timestamp
+  //
   // https://vladmihalcea.com/hibernate-facts-equals-and-hashcode/
   // https://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#mapping-model-pojo-equalshashcode
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Employer employer = (Employer) o;
-    return Objects.equals(companyName, employer.companyName);
+    if (o == null) return false;
+    if (!(o instanceof Employer)) return false;
+    Employer employer = (Employer) o;  // сравнение после приведения типов
+
+    return (
+            Objects.equals(id, employer.id) &&
+            Objects.equals(companyName, employer.companyName) &&
+            Objects.equals(creationTime, employer.creationTime)
+    );
+
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(companyName);
+    return Objects.hash(id, companyName, creationTime);
   }
+
+  public Employer() {}// вроде бы это дб обязательно
 
 }
