@@ -14,12 +14,18 @@ public class EmployerDao extends GenericDao {
    * избежать org.hibernate.LazyInitializationException
    * Также в запрос должен передаваться параметр employerId
    * <p>
+   *
+   *
    * https://vladmihalcea.com/the-best-way-to-handle-the-lazyinitializationexception/
    */
+
+  // https://javarush.com/quests/lectures/questhibernate.level16.lecture04
   public Employer getEager(int employerId) {
     return getSession()
-        .createQuery("from Employer employer", Employer.class)
-        .getSingleResult();
+        .createQuery(
+            "select ru.hh.school.entity.Employer(e.company_name) from Employer e join fetch e.vacancies where e.id = :id", Employer.class
+        ).uniqueResult();
+
   }
 
 }
